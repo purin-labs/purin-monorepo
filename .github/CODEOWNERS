@@ -1,6 +1,3 @@
 /.github/workflows/** @peitalin
-/.github/actions/** @peitalin
-/scripts/deploy-*.mjs @peitalin
-/scripts/deployment-targets.mjs @peitalin
+/scripts/*.mjs @peitalin
 /deployment/** @peitalin
-/docs/deployment/** @peitalin

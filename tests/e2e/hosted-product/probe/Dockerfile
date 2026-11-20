@@ -1,7 +1,0 @@
-FROM node:22-bookworm-slim
-WORKDIR /probe
-COPY server.mjs ./server.mjs
-ARG PROBE_SOURCE_REVISION
-ENV PROBE_SOURCE_REVISION=$PROBE_SOURCE_REVISION
-EXPOSE 8080
-CMD ["node", "server.mjs"]

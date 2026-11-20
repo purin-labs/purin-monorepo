@@ -1,5 +1,5 @@
 /**
- * Shared post-deployment readiness checks for the backend and frontend lanes.
+ * Post-deployment readiness checks for the company site.
  *
  * A freshly deployed Cloudflare Worker or Pages project is not immediately
  * consistent: the deployment API returns success before every edge serves the
@@ -7,9 +7,6 @@
  * recover with no further action. A single-shot check races that window and
  * reports a healthy deployment as failed.
  *
- * That false negative is expensive in production, where the lane has already
- * applied forward-only migrations and deployed every component by the time
- * smoke runs, and where "rollback" means a revert commit plus a full rebuild.
  * So each check is retried until it passes or the readiness budget expires,
  * and the attempt count is reported so a slow-but-healthy deployment is
  * distinguishable from a broken one.
@@ -35,10 +32,6 @@ export function isFailedCheck(result) {
 
 export function formatFailedCheck(result) {
   return result.name;
-}
-
-export async function isWalletSystemDeploymentReady(response) {
-  return response.status >= 200 && response.status < 300;
 }
 
 async function runReadinessCheck(check, budgetMs, intervalMs) {

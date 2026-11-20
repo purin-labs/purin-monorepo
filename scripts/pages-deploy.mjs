@@ -1,6 +1,6 @@
-/* Cloudflare Pages deploy helpers shared by the deploy scripts. They read the account
-   from CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID, so each caller chooses the
-   Cloudflare account through its environment. */
+/* Cloudflare Pages deploy helpers for the company site deploy. They read the account
+   from CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID, so the workflow chooses the
+   Cloudflare account through its environment secrets. */
 
 import fs from 'node:fs';
 import path from 'node:path';
