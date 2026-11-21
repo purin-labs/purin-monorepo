@@ -256,7 +256,7 @@ export function CompanyPage(): React.JSX.Element {
             <div className="h2-shell company-split company-details">
               <div>
                 <h2 id="company-details-title" className="h2-display company-split__title">
-                  Seams Technologies KK
+                  Purin Heavy Industries
                 </h2>
                 <p className="company-split__copy">
                   {t('companyLocation').replace('{year}', String(new Date().getFullYear()))}
