@@ -4,63 +4,20 @@ import prettier from 'eslint-config-prettier';
 import reactHooks from 'eslint-plugin-react-hooks';
 import tseslint from 'typescript-eslint';
 
-const R103E_DOMAIN_CAST_TYPE_NAME =
-  '/^(?:WalletAuthorityV1|PendingWalletAuthorityV1|ActiveWalletAuthorityV1|RevokedWalletAuthorityV1|ActiveEd25519WalletAuthorityV1|ActiveEcdsaWalletAuthorityV1|ActiveCombinedWalletAuthorityV1|WalletSignerActivationSetV1|WalletSignerActivationMaterialsV1|WalletAuthMethodRecordV2|WalletSessionAuthorizationV2|IssuedWalletSessionAuthorizationV2|PreparedWalletSessionAuthorizationV2|ActiveWalletSessionV1|ActiveSigningLaneReference|ActiveLaneProtocolSourceV1|LaneProductEpochActiveV1|ActiveWalletExecutionLaneHydration|ActiveRotatableWalletExecutionLaneHydrationV1|RestorableMpcMaterialRef|SigningLaneLifecycle|UsableRuntimeLane|ActiveUsableRuntimeLane|RestorableUsableRuntimeLane|RestorableRuntimeLaneMaterial|WalletSelectionRecordV1|WalletLockGenerationAdvanceInputV1)$/';
-
-const R103E_DOMAIN_CAST_RESTRICTION = {
-  selector: `TSAsExpression[typeAnnotation.typeName.name=${R103E_DOMAIN_CAST_TYPE_NAME}], TSTypeAssertion[typeAnnotation.typeName.name=${R103E_DOMAIN_CAST_TYPE_NAME}], TSAsExpression[typeAnnotation.typeName.right.name=${R103E_DOMAIN_CAST_TYPE_NAME}], TSTypeAssertion[typeAnnotation.typeName.right.name=${R103E_DOMAIN_CAST_TYPE_NAME}]`,
-  message:
-    'Do not manufacture R103E lifecycle, authority, session, lane, or lock state with a TypeScript assertion. Use its boundary parser or branch-specific builder.',
-};
-
-const ACCOUNT_PLATFORM_DOMAIN_TYPE_NAME =
-  '/^(?:PlatformScopeV1|ServiceTenantBindingV1|BoundServiceInstanceV1|ServiceProvisionCommandV1|AccountServiceInstanceV1|PlatformUsageEventV1|ReserveFundsRequestV1|SettleFundsRequestV1|ReleaseFundsRequestV1|MarkFundsIndeterminateRequestV1|ReconcileFundsRequestV1|FundsTerminalDeliveryV1|ServiceEligibilityRequestV1|DelegatedPlatformAssertionV1|ServiceIdentityLinkRequestV1|ServiceIdentityResolutionV1|ServiceProvisionOwnerAssertionV1|SatyrServiceFeePolicyV1|PlatformPrincipalV1|PlatformUserAuthorityV1|TrustedWalletExecutionQuoteV1|AuthenticatedAccountServiceProducerV1|VerifiedAccountUserAssertionV1|SponsoredPrepaidReservationHandle|DashboardBillingUsageCharge|DashboardBillingCostsState|AccountMigrationCohortV1|ConsoleOnboardingState|ConsoleAccountIdentityContext|ConsoleOnboardingContext)$/';
-
-const ACCOUNT_PLATFORM_DOMAIN_CAST_RESTRICTION = {
-  selector: `TSAsExpression[typeAnnotation.typeName.name=${ACCOUNT_PLATFORM_DOMAIN_TYPE_NAME}], TSTypeAssertion[typeAnnotation.typeName.name=${ACCOUNT_PLATFORM_DOMAIN_TYPE_NAME}], TSAsExpression[typeAnnotation.typeName.right.name=${ACCOUNT_PLATFORM_DOMAIN_TYPE_NAME}], TSTypeAssertion[typeAnnotation.typeName.right.name=${ACCOUNT_PLATFORM_DOMAIN_TYPE_NAME}]`,
-  message:
-    'Use the account platform boundary parser or branch builder. Type assertions cannot establish validated scope or lifecycle state.',
-};
-
 export default [
   {
     ignores: [
       '**/node_modules/**',
       '**/dist/**',
-      // Wallet and VoiceID assets that run_caddy.sh composes for the local wallet host.
-      'apps/seams-site/.wallet-public/**',
-      'apps/wallet-console/dist-platform/**',
-      'apps/wallet-console/dist-wallet/**',
-      '**/.next/**',
-      '**/.svelte-kit/**',
-      '**/.vercel/**',
       '**/.wrangler/**',
-      '**/.turbo/**',
-      '**/.vitepress/cache/**',
-      '**/.lake/**',
       '**/.claude/**',
       '**/.playwright-cli/**',
-      '**/.runtime/**',
-      '**/.local/**',
       '**/.artifacts/**',
-      '**/.release-artifacts/**',
-      '**/target/**',
       '**/coverage/**',
       '**/playwright-report/**',
       '**/test-results/**',
-      'crates/ed25519-yao-cloudflare-bench/build/**',
-      'crates/**/build/**',
-      'crates/**/bundled/**',
-      'crates/**/wasm-bench/pkg*/**',
-      'crates/**/pkg/**',
-      'crates/**/_build/**',
-      'tools/**/target/**',
-      'wasm/**/pkg/**',
-      'crates/router-ab-ed25519-yao-client/pkg/**',
-      'wasm/**/target/**',
       'apps/seams-site/public/**',
       'apps/seams-site/src/public/transaction-mocks/mock.js',
-      'output/playwright/**',
     ],
   },
 
@@ -139,12 +96,6 @@ export default [
 
       // Prefer `@ts-expect-error`, but don't fail the build on existing usage.
       '@typescript-eslint/ban-ts-comment': 'warn',
-
-      'no-restricted-syntax': [
-        'error',
-        R103E_DOMAIN_CAST_RESTRICTION,
-        ACCOUNT_PLATFORM_DOMAIN_CAST_RESTRICTION,
-      ],
     },
   },
 
@@ -165,40 +116,6 @@ export default [
   },
 
   {
-    files: ['apps/wallet-console/src/core/**/*.{ts,tsx}'],
-    rules: {
-      'no-restricted-imports': [
-        'error',
-        {
-          patterns: [
-            {
-              group: ['@app/*', '@wallet-product/*', '@seams-internal/wallet-console-*'],
-              message: 'Console core receives product and application behavior through contracts.',
-            },
-          ],
-        },
-      ],
-    },
-  },
-
-  {
-    files: ['apps/wallet-console/src/products/**/*.{ts,tsx}'],
-    rules: {
-      'no-restricted-imports': [
-        'error',
-        {
-          patterns: [
-            {
-              group: ['@app/*'],
-              message: 'Product modules do not depend on the application composition layer.',
-            },
-          ],
-        },
-      ],
-    },
-  },
-
-  {
     files: ['tests/**/*.{ts,tsx,js,jsx,mjs,cjs}', '**/*.{test,spec}.{ts,tsx,js,jsx,mjs,cjs}'],
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',
@@ -206,48 +123,6 @@ export default [
       '@typescript-eslint/no-unsafe-function-type': 'off',
       'react-hooks/rules-of-hooks': 'off',
       'react-hooks/exhaustive-deps': 'off',
-    },
-  },
-
-  {
-    // Complex domain-state records in tests must come from the shared factories
-    // (tests/AGENTS.md "Fixture rules"); inline literals drift when domain types change.
-    files: ['tests/unit/**/*.test.ts', 'tests/relayer/**/*.test.ts'],
-    ignores: [
-      'tests/unit/helpers/**',
-      'tests/helpers/**',
-      // Grandfathered pre-existing offenders (2026-07-23): migrate onto the shared
-      // factories and delete the entry. Do not add new entries.
-      'tests/unit/touchConfirm.workerRouter.integration.test.ts',
-      'tests/unit/evmClient.waitForReceipt.unit.test.ts',
-      'tests/unit/addWalletSigner.orchestration.unit.test.ts',
-      'tests/unit/seamsWeb.chainSigners.integration.test.ts',
-      'tests/unit/nonceCoordinator.unit.test.ts',
-      'tests/unit/cloudflareD1RouterApiServiceSurface.unit.test.ts',
-      'tests/unit/warmSessionStore.concurrency.unit.test.ts',
-      'tests/unit/warmEd25519SigningSessionAuthorization.unit.test.ts',
-      'tests/unit/walletRegistrationEcdsaRouterAbBootstrap.unit.test.ts',
-      'tests/unit/vite-wallet-corp.unit.test.ts',
-      'tests/unit/pluginRorOrigins.unit.test.ts',
-    ],
-    rules: {
-      'no-restricted-syntax': [
-        'error',
-        {
-          selector:
-            'TSSatisfiesExpression > TSTypeReference[typeName.name=/(Record|CapabilityState|AuthorizationState|SessionStatus)$/][typeName.name!="Record"]',
-          message:
-            'Inline domain-state record literal. Build it with a shared factory from tests/unit/helpers/ or tests/helpers/ (see tests/AGENTS.md, "Fixture rules").',
-        },
-        {
-          selector:
-            'VariableDeclarator[id.typeAnnotation.typeAnnotation.typeName.name=/(Record|CapabilityState|AuthorizationState|SessionStatus)$/][id.typeAnnotation.typeAnnotation.typeName.name!="Record"] > ObjectExpression',
-          message:
-            'Inline domain-state record literal. Build it with a shared factory from tests/unit/helpers/ or tests/helpers/ (see tests/AGENTS.md, "Fixture rules").',
-        },
-        R103E_DOMAIN_CAST_RESTRICTION,
-        ACCOUNT_PLATFORM_DOMAIN_CAST_RESTRICTION,
-      ],
     },
   },
 

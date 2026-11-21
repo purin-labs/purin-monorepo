@@ -1,6 +1,6 @@
 name: Deploy / company site
 
-# The company site (apps/seams-site) deploys apart from the Wallet frontends. Its own
+# The company site (apps/seams-site) deploys from this repository. Its environment
 # secrets choose its Cloudflare account, so a move to another account changes only
 # COMPANY_CLOUDFLARE_API_TOKEN and COMPANY_CLOUDFLARE_ACCOUNT_ID.
 

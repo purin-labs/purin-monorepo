@@ -1,8 +1,6 @@
 # Dependencies and build outputs
 node_modules/
 dist/
-/apps/wallet-console/dist-platform/
-/apps/wallet-console/dist-wallet/
 target/
 
 # Environment and local runtime state
@@ -13,7 +11,6 @@ target/
 .runtime/
 .local/
 sqlite/
-apps/seams-site/.caddy.log
 
 # Test, browser, and release artifacts
 playwright-report/
