@@ -19,6 +19,9 @@ const EcommercePage = React.lazy(() =>
 const CompanyPage = React.lazy(() =>
   import('@/pages/company/page').then((module) => ({ default: module.CompanyPage })),
 );
+const BrandingPage = React.lazy(() =>
+  import('@/pages/branding/page').then((module) => ({ default: module.BrandingPage })),
+);
 const NotFoundPage = React.lazy(() =>
   import('@/pages/not-found/page').then((module) => ({ default: module.NotFoundPage })),
 );
@@ -116,6 +119,8 @@ export const App: React.FC = () => {
         return <WalletPricingRedirect locale="ja" />;
       case '/company':
         return <CompanyPage />;
+      case '/branding':
+        return <BrandingPage />;
       case '/contact':
         return <ContactRedirect locale="en" />;
       case '/ja/contact':

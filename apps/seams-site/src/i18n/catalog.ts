@@ -27,6 +27,69 @@ export const messages = {
     en: 'Purin makes Purin Pantry, the operating system for modern bakeries and cafés, in which Sous Chef agents run the online shop, the inbox and the bake plan. The owner approves each change that matters, and every action leaves a receipt.',
     ja: 'Purinは、モダンなベーカリーとカフェのためのOS「Purin Pantry」をつくっています。Sous Chefエージェントがオンラインショップ、受信箱、生産計画を運営し、重要な変更はオーナーが承認します。すべての操作に記録が残ります。',
   },
+  brand: { en: 'Brand', ja: 'ブランド' },
+  brandingPageTitle: { en: 'Brand | Purin', ja: 'ブランド | Purin' },
+  brandingDescription: {
+    en: 'The Purin mark is a cat that looks at a custard pudding. See the mark, the wordmark, the colours and the motion.',
+    ja: 'Purinのマークは、カスタードプリンを見つめる猫です。マーク、ワードマーク、カラー、モーションを紹介します。',
+  },
+  brandingTitle: { en: 'A cat and its pudding.', ja: '猫と、\u200bプリン。' },
+  brandingSub: {
+    en: 'The Purin mark is a cat that looks at a custard pudding. This page shows the mark, its colours and its motion.',
+    ja: 'Purinのマークは、カスタードプリンを見つめる猫です。このページでは、マーク、カラー、モーションを紹介します。',
+  },
+  brandingMarkAlt: {
+    en: 'The Purin mark: a dark cat behind a custard pudding',
+    ja: 'Purinのマーク：カスタードプリンの後ろにいる濃い色の猫',
+  },
+  brandingMotionTitle: { en: 'The mark moves.', ja: 'マークは\u200b動きます。' },
+  brandingMotionSway: {
+    en: 'The cat sways from side to side.',
+    ja: '猫が左右にゆっくり揺れます。',
+  },
+  brandingMotionJiggle: {
+    en: 'The pudding jiggles each time the cat turns.',
+    ja: '猫が向きを変えるたびに、プリンがぷるんと揺れます。',
+  },
+  brandingMotionEars: {
+    en: 'One ear flicks, then the other.',
+    ja: '片方の耳がぴくっと動き、続いてもう片方の耳が動きます。',
+  },
+  brandingMotionStill: {
+    en: 'The less-motion setting of your device stops the motion.',
+    ja: '端末で「視差効果を減らす」を設定すると、動きは止まります。',
+  },
+  brandingFormsTitle: {
+    en: 'Mark, icon and wordmark',
+    ja: 'マーク、\u200bアイコン、\u200bワードマーク',
+  },
+  brandingMark: { en: 'Mark', ja: 'マーク' },
+  brandingMarkCopy: {
+    en: 'The cat is dark, so the mark belongs on a light ground.',
+    ja: '猫は濃い色なので、マークは明るい背景で使います。',
+  },
+  brandingIcon: { en: 'Icon', ja: 'アイコン' },
+  brandingIconCopy: {
+    en: 'The tile has its own cream ground, so the icon also works on a dark ground.',
+    ja: 'タイルがクリーム色の背景を持つので、暗い背景でも使えます。',
+  },
+  brandingWordmark: { en: 'Wordmark', ja: 'ワードマーク' },
+  brandingWordmarkCopy: {
+    en: 'The cat and the word PURIN in one colour.',
+    ja: '猫と「PURIN」の文字を1色で表します。',
+  },
+  brandingColoursTitle: { en: 'Four colours', ja: '4つの\u200bカラー' },
+  brandingColourCat: { en: 'Cat', ja: '猫' },
+  brandingColourCatUse: { en: 'The cat', ja: '猫' },
+  brandingColourCustard: { en: 'Custard', ja: 'カスタード' },
+  brandingColourCustardUse: { en: 'The pudding', ja: 'プリン' },
+  brandingColourCaramel: { en: 'Caramel', ja: 'カラメル' },
+  brandingColourCaramelUse: { en: 'The sauce', ja: 'ソース' },
+  brandingColourCream: { en: 'Cream', ja: 'クリーム' },
+  brandingColourCreamUse: {
+    en: 'The eyes, the mouth and the icon tile',
+    ja: '目、口、アイコンのタイル',
+  },
   contactSales: { en: 'Contact sales', ja: '営業に相談' },
   satyrCopy: {
     en: 'Agents run the online shop, menus, orders, payments and the inbox. They work in Slack and in the Portal, inside the limits that you set.',

@@ -1,0 +1,159 @@
+/* ---------- hero: plain and short, like the company page ---------- */
+
+.h2-hero-simple.branding-hero {
+  padding: 144px 0 32px;
+}
+
+/* line the text up with the section content below, not the column edge */
+.h2-hero-simple.branding-hero > .h2-shell {
+  padding-left: 36px;
+}
+
+@media (max-width: 900px) {
+  .h2-hero-simple.branding-hero {
+    padding: 120px 0 28px;
+  }
+}
+
+/* ---------- the mark in motion: a paper stage and the list of what moves ---------- */
+
+.branding-split {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: 28px 58px;
+  align-items: center;
+}
+
+.branding-split__title {
+  font-size: clamp(29px, 3.25vw, 41.5px);
+}
+
+.branding-stage {
+  display: grid;
+  place-items: center;
+  padding: 28px;
+  border-radius: var(--h2-radius-card);
+  background: #faf8f3;
+}
+
+.branding-stage img {
+  display: block;
+  width: min(100%, 360px);
+  height: auto;
+}
+
+.branding-list {
+  margin: 20px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.branding-list li {
+  padding: 14px 2px;
+  border-bottom: 1px dashed var(--h2-stone);
+  font-size: var(--h2-text-title);
+  line-height: 1.5;
+  color: var(--h2-graphite);
+}
+
+.branding-list li:first-child {
+  border-top: 1px dashed var(--h2-stone);
+}
+
+@media (max-width: 900px) {
+  .branding-split {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------- the three forms and the four colours: cards in a row ---------- */
+
+.branding-forms,
+.branding-colours {
+  display: grid;
+  gap: 22px;
+  margin: 28px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.branding-forms {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.branding-colours {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.branding-forms h3,
+.branding-colours h3 {
+  margin: 14px 0 0;
+  font-size: var(--h2-text-title);
+  font-weight: 600;
+  color: var(--h2-ink);
+}
+
+.branding-forms p,
+.branding-colours p {
+  margin: 4px 0 0;
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--h2-smoke);
+}
+
+.branding-form {
+  display: grid;
+  place-items: center;
+  height: 220px;
+  padding: 24px;
+  border-radius: var(--h2-radius-card);
+}
+
+.branding-form img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.branding-form--paper {
+  background: #faf8f3;
+  color: var(--h2-ink);
+}
+
+/* the dark of the cat: the icon carries its own cream tile */
+.branding-form--dark {
+  background: #301d17;
+}
+
+.branding-form .purin-wordmark {
+  max-width: 100%;
+}
+
+.branding-colour {
+  display: flex;
+  align-items: flex-end;
+  height: 132px;
+  padding: 14px 16px;
+  border: 1px solid rgba(10, 10, 10, 0.08);
+  border-radius: var(--h2-radius-card);
+  color: #301d17;
+}
+
+.branding-colour--dark {
+  color: #fbf0dc;
+}
+
+.branding-colour code {
+  font: 600 14px/1 ui-monospace, 'SF Mono', Menlo, monospace;
+  letter-spacing: 0.02em;
+}
+
+@media (max-width: 900px) {
+  .branding-forms {
+    grid-template-columns: 1fr;
+  }
+
+  .branding-colours {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

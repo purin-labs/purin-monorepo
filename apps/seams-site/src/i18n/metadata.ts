@@ -13,6 +13,7 @@ const PAGE_TEXT: Record<TranslatedPage, { title: MessageKey; description: Messag
   home: { title: 'homePageTitle', description: 'homeDescription' },
   ecommerce: { title: 'ecommercePageTitle', description: 'ecommerceDescription' },
   company: { title: 'companyPageTitle', description: 'companyDescription' },
+  branding: { title: 'brandingPageTitle', description: 'brandingDescription' },
 };
 
 export function pageTitle(page: TranslatedPage, locale: Locale): string {
