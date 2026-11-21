@@ -1,7 +1,12 @@
 export type Locale = 'en' | 'ja';
-export type TranslatedPage = 'home' | 'ecommerce' | 'company';
+export type TranslatedPage = 'home' | 'ecommerce' | 'company' | 'branding';
 
-export const translatedPages: readonly TranslatedPage[] = ['home', 'ecommerce', 'company'];
+export const translatedPages: readonly TranslatedPage[] = [
+  'home',
+  'ecommerce',
+  'company',
+  'branding',
+];
 export const locales: readonly Locale[] = ['en', 'ja'];
 
 /* A translated page has its own document per locale, with its own metadata.
@@ -14,6 +19,7 @@ const PAGE_SEGMENTS: Record<TranslatedPage, string> = {
   home: '',
   ecommerce: 'ecommerce',
   company: 'company',
+  branding: 'branding',
 };
 
 function stripLocalePrefix(pathname: string): { locale: Locale; rest: string } {

@@ -16,7 +16,7 @@ import { useSiteRouter } from '@/app/router/useSiteRouter';
 import '@/styles/h2.css';
 import { CONTACT_LINK_TARGET } from '@/components/contact/contactLink';
 
-/* Shared section library for the h2 marketing pages (/, /ecommerce, /company).
+/* Shared section library for the h2 marketing pages (/, /ecommerce, /company, /branding).
    Every component renders inside a `.h2-page > .h2-col` wrapper and styles
    itself from src/styles/h2.css. */
 
@@ -1052,6 +1052,7 @@ function getFooterGroups(t: Translate): { heading: string; links: H2FooterLink[]
       links: [
         { label: t('about'), to: '/company/' },
         { label: t('blog'), to: '/company/#blog' },
+        { label: t('brand'), to: '/branding/' },
         { label: t('contact'), to: CONTACT_LINK_TARGET },
       ],
     },

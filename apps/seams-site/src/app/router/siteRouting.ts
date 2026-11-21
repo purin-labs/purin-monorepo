@@ -61,6 +61,8 @@ export function resolveHref(target: string, locale: Locale): string {
       return `${pagePath('ecommerce', locale)}${url.search}${url.hash}`;
     case '/company':
       return `${pagePath('company', locale)}${url.search}${url.hash}`;
+    case '/branding':
+      return `${pagePath('branding', locale)}${url.search}${url.hash}`;
     case '/wallet':
     case '/wallet/pricing': {
       const wallet = new URL(
