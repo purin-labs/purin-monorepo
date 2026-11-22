@@ -44,6 +44,7 @@ const PAGE_ENTRIES = Object.freeze([
   ['ja/company/index.html', 'Japanese company entry'],
   ['branding/index.html', 'Brand entry'],
   ['ja/branding/index.html', 'Japanese brand entry'],
+  ['branding/front-page/index.html', 'Front page concept entry'],
   ['sitemap.xml', 'Sitemap'],
 ]);
 const SMOKE_PATHS = Object.freeze([
@@ -55,6 +56,7 @@ const SMOKE_PATHS = Object.freeze([
   '/ja/company/',
   '/branding/',
   '/ja/branding/',
+  '/branding/front-page/',
   '/sitemap.xml',
 ]);
 

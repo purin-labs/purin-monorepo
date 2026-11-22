@@ -90,6 +90,12 @@ export const messages = {
     en: 'The eyes, the mouth and the icon tile',
     ja: '目、口、アイコンのタイル',
   },
+  brandingConceptTitle: { en: 'The cat at work', ja: '働く\u200b猫' },
+  brandingConceptCopy: {
+    en: 'A concept for the front page: the cat waits for a reply, stalks a progress line and stamps an approval. The concept is in English only.',
+    ja: 'フロントページのコンセプトです。猫が返信を待ち、進捗ラインを狙い、承認のスタンプを押します。コンセプトは英語のみです。',
+  },
+  brandingConceptLink: { en: 'Open the concept', ja: 'コンセプトを開く' },
   contactSales: { en: 'Contact sales', ja: '営業に相談' },
   satyrCopy: {
     en: 'Agents run the online shop, menus, orders, payments and the inbox. They work in Slack and in the Portal, inside the limits that you set.',

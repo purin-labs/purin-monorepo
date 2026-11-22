@@ -31,6 +31,9 @@ const COLOURS: readonly Colour[] = [
   { name: 'brandingColourCream', use: 'brandingColourCreamUse', value: '#FBF0DC', onDark: false },
 ];
 
+/* the front page concept: its own entry in the build, in English only */
+const FRONT_PAGE_CONCEPT = '/branding/front-page/';
+
 const MOTION: readonly MessageKey[] = [
   'brandingMotionSway',
   'brandingMotionJiggle',
@@ -137,6 +140,22 @@ export function BrandingPage(): React.JSX.Element {
                   </li>
                 ))}
               </ul>
+            </div>
+          </section>
+
+          <section
+            className="h2-section h2-section--compact h2-rule"
+            aria-labelledby="branding-concept-title"
+          >
+            <div className="h2-shell branding-concept">
+              <h2 id="branding-concept-title" className="h2-display branding-split__title">
+                {t('brandingConceptTitle')}
+              </h2>
+              <p>{t('brandingConceptCopy')}</p>
+              {/* a separate page, outside the site router: a plain link loads it */}
+              <a className="h2-btn h2-btn--primary" href={FRONT_PAGE_CONCEPT}>
+                {t('brandingConceptLink')}
+              </a>
             </div>
           </section>
         </main>
