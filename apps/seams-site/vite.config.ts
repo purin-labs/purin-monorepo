@@ -98,6 +98,17 @@ export default defineConfig(({ mode }) => {
       },
     },
     plugins: [react(), siteLanguagePages(env.VITE_SITE_ORIGIN || 'https://purin.io/')],
+    build: {
+      rollupOptions: {
+        input: {
+          index: fileURLToPath(new URL('./index.html', import.meta.url)),
+          // the front page concept with the cat, linked from the brand page (English only)
+          frontPageConcept: fileURLToPath(
+            new URL('./branding/front-page/index.html', import.meta.url),
+          ),
+        },
+      },
+    },
     resolve: {
       alias: [
         { find: '@', replacement: appSrc },
