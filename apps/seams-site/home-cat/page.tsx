@@ -9,6 +9,7 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { EcosystemField } from '@/components/h2/EcosystemField';
 import { InkDrawing } from '@/components/h2/ink/InkScene';
+import { goatCatScene } from '@/components/h2/ink/catScenes';
 import { keyScene, stalkScene } from '@/components/h2/ink/scenes';
 import NavbarCompact from '@/components/Navbar/NavbarCompact';
 import { ProductTour } from '@/components/h2/ProductTour';
@@ -27,11 +28,13 @@ import {
   H2WalletBand,
 } from '@/components/h2/sections';
 import '@/i18n/styles.css';
-import { Cat, FACE, Mark, PUDDING_AT, Pudding, jiggle, useLook } from './cat';
+import { Cat, FACE, Mark, Pudding, useLook } from './cat';
 import './home-cat.css';
 
 /* Concept: the front page, with the Purin cat in six parts of the interface.
-   1 avatar (hero chip)  2 cursor follow (hero)  3 progress (the cat stalks the end of the tour timer line)
+   The ink is the world and the flat mark is the signature.
+   1 avatar (hero chip)  2 ink cat (hero drawing: it follows the goat and watches the kite)
+   3 progress (the cat stalks the end of the tour timer line)
    4 stamp (closing banner)  5 loader (integrations banner)  6 guide (page corner) */
 
 const reducedMotion = (): boolean =>
@@ -51,18 +54,6 @@ function useInView(ref: React.RefObject<HTMLElement | null>, margin = '0px'): bo
   }, [ref, margin]);
   return inView;
 }
-
-/* ---------- hero: the avatar chip and the cat that follows the cursor ---------- */
-
-const HERO_LOOK = { face: FACE, pudding: PUDDING_AT, reach: 1.5, travel: 1.3 } as const;
-
-/* what the hero cat says: one line for each part of the hero text */
-const HERO_SAYS = [
-  'Hello. I am Sous Chef.',
-  'I drafted three replies.',
-  'The Saturday bake plan is ready.',
-  'One refund waits for you.',
-] as const;
 
 /* pairs of [seconds, value]; the value eases from one pair to the next */
 type Key = readonly [number, number];
@@ -202,37 +193,14 @@ function TourRider({ children }: { children: React.ReactNode }): React.JSX.Eleme
   );
 }
 
+/* ---------- hero: the avatar chip, and the ink cat that follows the goat ---------- */
+
 function HcHero(): React.JSX.Element {
   const { linkProps } = useSiteRouter();
   const copy = useSiteCopy();
   const contactProps = linkProps(CONTACT_LINK_TARGET);
   const pantryProps = linkProps('/ecommerce');
   const kitchenProps = linkProps('/ecommerce#kitchen');
-  const catRef = React.useRef<HTMLDivElement>(null);
-  const actorRef = React.useRef<HTMLDivElement>(null);
-  const inView = useInView(actorRef);
-  const [line, setLine] = React.useState(0);
-  const [pat, setPat] = React.useState(false);
-  /* true until the cat says its second line: the first line waits for the cat to come up */
-  const fresh = React.useRef(true);
-  useLook(catRef, HERO_LOOK);
-
-  /* the cat says its next line while the hero is on screen */
-  React.useEffect(() => {
-    if (!inView || pat || reducedMotion()) return undefined;
-    const timer = window.setInterval(() => {
-      fresh.current = false;
-      setLine((n) => (n + 1) % HERO_SAYS.length);
-    }, 5000);
-    return () => window.clearInterval(timer);
-  }, [inView, pat]);
-
-  /* a press on the cat: it shuts its eyes and hops */
-  React.useEffect(() => {
-    if (!pat) return undefined;
-    const timer = window.setTimeout(() => setPat(false), 1500);
-    return () => window.clearTimeout(timer);
-  }, [pat]);
 
   return (
     <>
@@ -241,25 +209,8 @@ function HcHero(): React.JSX.Element {
         aria-labelledby="h2-home-title"
       >
         <div className="h2-shell">
-          <div ref={actorRef} className="hc-hero__actor" aria-hidden>
-            <p
-              className="hc-hero__says"
-              key={pat ? 'pat' : line}
-              style={fresh.current ? ({ '--says-delay': '0.95s' } as React.CSSProperties) : undefined}
-            >
-              {pat ? 'Purr.' : HERO_SAYS[line]}
-            </p>
-            <div
-              ref={catRef}
-              className={`hc-hero__cat${pat ? ' is-pat' : ''}`}
-              onClick={() => {
-                fresh.current = false;
-                setPat(true);
-              }}
-            >
-              <Mark />
-            </div>
-          </div>
+          {/* the ink is the world: the goat leads the kite, and the cat follows and waits */}
+          <InkDrawing scene={goatCatScene} className="h2-ink--hero" drawn />
           <div className="h2-hero-simple__copy">
             <p className="hc-chip">
               <span className="hc-chip__disc" aria-hidden>
@@ -280,14 +231,6 @@ function HcHero(): React.JSX.Element {
                 className="h2-btn h2-btn--primary h2-btn--lg"
                 href={contactProps.href}
                 onClick={contactProps.onClick}
-                onPointerEnter={() => {
-                  /* the cat sees the pointer on the main button */
-                  const cat = catRef.current;
-                  if (!cat || reducedMotion()) return;
-                  cat.classList.add('is-keen');
-                  jiggle(cat);
-                }}
-                onPointerLeave={() => catRef.current?.classList.remove('is-keen')}
               >
                 {copy.common.talkToUs}
               </a>

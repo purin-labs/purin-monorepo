@@ -178,16 +178,8 @@ export function Pudding({
 
 const clamp = (v: number, lo: number, hi: number): number => Math.max(lo, Math.min(hi, v));
 
-/* the centre of the face and of the pudding, as parts of the mark's square */
+/* the centre of the face, as parts of the mark's square */
 export const FACE: Pt = [0.5, 0.41];
-export const PUDDING_AT: Pt = [0.49, 0.77];
-
-/** Restarts the pudding wobble on an element. */
-export function jiggle(el: HTMLElement): void {
-  el.classList.remove('is-jiggle');
-  void el.offsetWidth;
-  el.classList.add('is-jiggle');
-}
 
 /**
  * The cat in `ref` leans and looks at the pointer. `face` is the centre of the
@@ -196,15 +188,7 @@ export function jiggle(el: HTMLElement): void {
  */
 export function useLook(
   ref: React.RefObject<HTMLElement | null>,
-  { face = FACE, reach = 1, lean = 4.5, travel = 1, pudding }: {
-    face?: Pt;
-    reach?: number;
-    lean?: number;
-    /* how far the face goes, as a part of the usual distance */
-    travel?: number;
-    /* the centre of the pudding, to make it jiggle under the pointer */
-    pudding?: Pt;
-  } = {},
+  { face = FACE, reach = 1, lean = 4.5 }: { face?: Pt; reach?: number; lean?: number } = {},
 ): void {
   React.useEffect(() => {
     const el = ref.current;
@@ -213,13 +197,12 @@ export function useLook(
     let target = { x: 0, y: 0 };
     const now = { x: 0, y: 0, lean: 0 };
     let frame = 0;
-    let lastJiggle = 0;
     const step = (): void => {
       now.x += (target.x - now.x) * 0.14;
       now.y += (target.y - now.y) * 0.14;
       now.lean += (target.x * -lean - now.lean) * 0.1;
-      el.style.setProperty('--lx', `${(now.x * 34 * travel).toFixed(1)}px`);
-      el.style.setProperty('--ly', `${(now.y * 22 * travel).toFixed(1)}px`);
+      el.style.setProperty('--lx', `${(now.x * 34).toFixed(1)}px`);
+      el.style.setProperty('--ly', `${(now.y * 22).toFixed(1)}px`);
       el.style.setProperty('--lean', `${now.lean.toFixed(2)}deg`);
       const settled =
         Math.abs(target.x - now.x) < 0.004 &&
@@ -234,19 +217,6 @@ export function useLook(
       const dy = event.clientY - (box.top + box.height * face[1]);
       const span = Math.max(box.width, 160) * reach;
       target = { x: clamp(dx / span, -1, 1), y: clamp(dy / span, -1, 1) };
-      if (pudding) {
-        const near =
-          Math.hypot(
-            event.clientX - (box.left + box.width * pudding[0]),
-            event.clientY - (box.top + box.height * pudding[1]),
-          ) <
-          box.width * 0.2;
-        el.classList.toggle('is-keen', near);
-        if (near && event.timeStamp - lastJiggle > 1100) {
-          lastJiggle = event.timeStamp;
-          jiggle(el);
-        }
-      }
       if (!frame) frame = requestAnimationFrame(step);
     };
     window.addEventListener('pointermove', onMove, { passive: true });
@@ -254,5 +224,5 @@ export function useLook(
       window.removeEventListener('pointermove', onMove);
       cancelAnimationFrame(frame);
     };
-  }, [ref, face, reach, lean, travel, pudding]);
+  }, [ref, face, reach, lean]);
 }

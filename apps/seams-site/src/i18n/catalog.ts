@@ -92,8 +92,8 @@ export const messages = {
   },
   brandingConceptTitle: { en: 'The cat at work', ja: '働く\u200b猫' },
   brandingConceptCopy: {
-    en: 'A concept for the front page: the cat waits for a reply, stalks a progress line and stamps an approval. The concept is in English only.',
-    ja: 'フロントページのコンセプトです。猫が返信を待ち、進捗ラインを狙い、承認のスタンプを押します。コンセプトは英語のみです。',
+    en: 'A concept for the front page: an ink cat follows the goat, and the mark stalks a progress line and stamps an approval. The concept is in English only.',
+    ja: 'フロントページのコンセプトです。墨の猫がヤギについて行き、マークの猫が進捗ラインを狙い、承認のスタンプを押します。コンセプトは英語のみです。',
   },
   brandingConceptLink: { en: 'Open the concept', ja: 'コンセプトを開く' },
   contactSales: { en: 'Contact sales', ja: '営業に相談' },

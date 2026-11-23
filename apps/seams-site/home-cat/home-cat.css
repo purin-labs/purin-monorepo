@@ -175,7 +175,7 @@
   scale: 1.13;
 }
 
-/* ---------- 1 and 2. hero: the avatar chip and the cat that follows the cursor ---------- */
+/* ---------- 1. hero: the avatar chip (2, the ink cat, is in the hero drawing) ---------- */
 
 .hc-chip {
   position: relative;
@@ -219,125 +219,6 @@
   border: 2px solid #fff;
   border-radius: 50%;
   background: var(--pc-custard);
-}
-
-/* the cat and its bubble; the pudding stands on the bottom edge of the panel */
-.hc-hero__actor {
-  position: absolute;
-  right: 7%;
-  bottom: -30px;
-  width: 410px;
-}
-
-/* the cat comes up from under the edge of the panel, a little too far, then settles */
-@keyframes hc-hero-rise {
-  0% {
-    transform: translateY(104%);
-  }
-  72% {
-    transform: translateY(-2.5%);
-  }
-  100% {
-    transform: translateY(0);
-  }
-}
-
-@keyframes hc-hero-hop {
-  0% {
-    transform: translateY(0);
-  }
-  35% {
-    transform: translateY(-4%);
-  }
-  100% {
-    transform: translateY(0);
-  }
-}
-
-.hc-hero__cat {
-  cursor: pointer;
-  animation: hc-hero-rise 0.8s cubic-bezier(0.25, 0.8, 0.3, 1) 0.15s both;
-}
-
-.hc-hero__cat.is-pat .pc {
-  animation: hc-hero-hop 0.42s ease-out;
-}
-
-.hc-hero__cat.is-pat .pc-eye {
-  animation: none;
-  transform: scaleY(0.16);
-}
-
-.hc-hero__cat.is-pat .pc-ear {
-  animation: pc-flick-once 0.45s linear;
-}
-
-.hc-hero__cat.is-pat .pc-ear--r {
-  animation-delay: 0.14s;
-}
-
-/* the bubble is over the ears; its tight corner points at the cat */
-.hc-hero__says {
-  position: absolute;
-  bottom: calc(100% - 15px);
-  left: 38%;
-  width: max-content;
-  max-width: 280px;
-  margin: 0;
-  padding: 10px 16px;
-  border: 1.5px solid var(--pc-cat);
-  border-radius: 18px 18px 18px 5px;
-  background: #fff;
-  box-shadow: 0 14px 28px -18px rgba(48, 29, 23, 0.55);
-  font: 600 15px/1.35 var(--h2-font);
-  color: var(--h2-ink);
-  transform-origin: 0 100%;
-  /* the first line waits until the cat is up */
-  animation: hc-guide-pop 0.34s cubic-bezier(0.2, 1.2, 0.4, 1) var(--says-delay, 0s) both;
-}
-
-/* a narrow page: a smaller cat stays at the right of the text */
-@media (max-width: 1000px) {
-  .hc-hero__actor {
-    right: 28px;
-    bottom: -20px;
-    width: 270px;
-  }
-
-  .hc-hero .h2-hero-simple__copy {
-    max-width: calc(100% - 286px);
-  }
-
-  .hc-hero__says {
-    left: 12%;
-    max-width: 250px;
-    font-size: 14px;
-  }
-}
-
-/* a phone: the cat has its own row under the buttons */
-@media (max-width: 860px) {
-  .hc-hero .h2-hero-simple__copy {
-    order: 1;
-    max-width: none;
-  }
-
-  .hc-hero__actor {
-    order: 2;
-    position: relative;
-    right: auto;
-    bottom: auto;
-    width: min(62vw, 300px);
-    margin: 44px auto -38px;
-  }
-
-  /* the bubble is centred over the cat, so that a long line stays on the panel */
-  .hc-hero__says {
-    left: 50%;
-    max-width: min(78vw, 260px);
-    translate: -50% 0;
-    transform-origin: 50% 100%;
-  }
 }
 
 /* ---------- 3. progress: the cat is behind the tour's timer line, and it stalks the end of the line ---------- */
