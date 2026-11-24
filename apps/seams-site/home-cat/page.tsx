@@ -41,11 +41,9 @@ import {
   useLook,
 } from './cat';
 import ramIcon from './ram-icon.svg?url';
+import { R } from './ram-paths';
 import ramWordmark from './ram-wordmark.svg?url';
 import './home-cat.css';
-
-/* the width of the ram wordmark for each unit of its height */
-const RAM_WORDMARK_RATIO = 3.0647;
 
 /* Concept: the front page, with the Purin cat in six parts of the interface.
    The ink is the world and the flat mark is the signature.
@@ -473,6 +471,19 @@ const LINES: readonly { value: Lines; label: string }[] = [
   { value: 'brushed', label: 'Brushed' },
 ];
 
+/* How the page shows the mark. The address keeps it: `#ram`, or `#ram-brushed`. */
+type Look = { readonly animal: Animal; readonly lines: Lines };
+
+const startLook = (): Look => {
+  const parts = window.location.hash.slice(1).split('-');
+  return {
+    animal: parts[0] === 'ram' ? 'ram' : 'cat',
+    lines: parts.includes('brushed') ? 'brushed' : 'solid',
+  };
+};
+
+const lookHash = (look: Look): string => (look.lines === 'brushed' ? '#ram-brushed' : '#ram');
+
 function Switch<T extends string>({
   label,
   value,
@@ -504,24 +515,21 @@ function Switch<T extends string>({
 /* ---------- the page ---------- */
 
 function HomeCatPage({
-  animal,
-  onAnimal,
-  lines,
-  onLines,
+  look,
+  onLook,
 }: {
-  animal: Animal;
-  onAnimal: (next: Animal) => void;
-  lines: Lines;
-  onLines: (next: Lines) => void;
+  look: Look;
+  onLook: (next: Look) => void;
 }): React.JSX.Element {
+  const ram = look.animal === 'ram';
   return (
     <div
-      className={`h2-page hc${animal === 'ram' ? ' is-ram' : ''}`}
+      className={`h2-page hc${ram ? ' is-ram' : ''}`}
       style={
-        animal === 'ram'
+        ram
           ? ({
               '--hc-wordmark': `url("${ramWordmark}")`,
-              '--hc-wordmark-ratio': RAM_WORDMARK_RATIO,
+              '--hc-wordmark-ratio': R.wordmarkRatio,
             } as React.CSSProperties)
           : undefined
       }
@@ -538,23 +546,28 @@ function HomeCatPage({
       </div>
       <Guide />
       <div className="hc-switches">
-        <Switch label="Mark" value={animal} options={ANIMALS} onChange={onAnimal} />
-        {animal === 'ram' ? (
-          <Switch label="Lines of the ram" value={lines} options={LINES} onChange={onLines} />
+        <Switch
+          label="Mark"
+          value={look.animal}
+          options={ANIMALS}
+          onChange={(animal) => onLook({ ...look, animal })}
+        />
+        {ram ? (
+          <Switch
+            label="Lines of the ram"
+            value={look.lines}
+            options={LINES}
+            onChange={(lines) => onLook({ ...look, lines })}
+          />
         ) : null}
       </div>
     </div>
   );
 }
 
-/* `#ram` in the address opens the page with the ram, and `#ram-brushed` with its brushed lines */
-const startAnimal = (): Animal => (window.location.hash.startsWith('#ram') ? 'ram' : 'cat');
-const startLines = (): Lines => (window.location.hash === '#ram-brushed' ? 'brushed' : 'solid');
-
 function Shell(): React.JSX.Element {
   const sitePage = React.useMemo(() => parseSitePage('/'), []);
-  const [animal, setAnimal] = React.useState<Animal>(startAnimal);
-  const [lines, setLines] = React.useState<Lines>(startLines);
+  const [look, setLook] = React.useState<Look>(startLook);
   React.useEffect(() => {
     const root = document.documentElement;
     root.setAttribute('data-seams-theme', 'light');
@@ -565,16 +578,16 @@ function Shell(): React.JSX.Element {
   }, []);
   /* the favicon and the address follow the switch */
   React.useEffect(() => {
+    const ram = look.animal === 'ram';
     const icon = document.querySelector<HTMLLinkElement>('link[rel="icon"]');
-    if (icon) icon.href = animal === 'ram' ? ramIcon : '/brand/favicon.svg';
-    const hash = lines === 'brushed' ? '#ram-brushed' : '#ram';
-    window.history.replaceState(null, '', animal === 'ram' ? hash : window.location.pathname);
-  }, [animal, lines]);
+    if (icon) icon.href = ram ? ramIcon : '/brand/favicon.svg';
+    window.history.replaceState(null, '', ram ? lookHash(look) : window.location.pathname);
+  }, [look]);
   return (
     <SitePageContext.Provider value={sitePage}>
-      <AnimalContext.Provider value={animal}>
-        <LinesContext.Provider value={lines}>
-          <HomeCatPage animal={animal} onAnimal={setAnimal} lines={lines} onLines={setLines} />
+      <AnimalContext.Provider value={look.animal}>
+        <LinesContext.Provider value={look.lines}>
+          <HomeCatPage look={look} onLook={setLook} />
           <ContactModalHost />
         </LinesContext.Provider>
       </AnimalContext.Provider>
