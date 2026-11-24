@@ -152,7 +152,23 @@ function RamHead(): React.JSX.Element {
   );
 }
 
-/* the chest and the paws, and the pudding under them */
+/* The chest is soft: it leans about the tips of the paws (`pc-body`) and carries the head. The
+   head is hard, because of its horns: `pc-unbody` takes the lean of the chest back out of it,
+   and `pc-unjiggle` the wobble of the pudding, so the head only moves with the neck and turns. */
+function RamUpper(): React.JSX.Element {
+  return (
+    <About p={R.pivots.paws} c="pc-body">
+      <RamPiece part="chest" fill="var(--pc-ram)" />
+      <About p={R.pivots.neck} c="pc-unbody">
+        <About p={R.pivots.neck} c="pc-unjiggle">
+          <RamHead />
+        </About>
+      </About>
+    </About>
+  );
+}
+
+/* the ram, and the pudding under its paws */
 function RamFront({ pudding = true }: { pudding?: boolean }): React.JSX.Element {
   return (
     <>
@@ -162,19 +178,14 @@ function RamFront({ pudding = true }: { pudding?: boolean }): React.JSX.Element 
           <RamPiece part="caramel" fill="var(--pc-caramel)" />
         </>
       ) : null}
-      <RamPiece part="chest" fill="var(--pc-ram)" />
+      <RamUpper />
     </>
   );
 }
 
 function Body({ id }: { id: string }): React.JSX.Element {
   if (useContext(AnimalContext) === 'cat') return <CatBody id={id} />;
-  return (
-    <>
-      <RamFront pudding={false} />
-      <RamHead />
-    </>
-  );
+  return <RamFront pudding={false} />;
 }
 
 function PuddingBody({ rim, halo = false }: { rim: string; halo?: boolean }): React.JSX.Element {
@@ -236,7 +247,12 @@ function PuddingBody({ rim, halo = false }: { rim: string; halo?: boolean }): Re
 type Pose = LineSet & {
   readonly fills: Readonly<Record<string, string>>;
   readonly order: readonly string[];
-  readonly pivots: { readonly feet: Pt; readonly earL: Pt; readonly earR: Pt };
+  readonly pivots: {
+    readonly feet: Pt;
+    readonly earL: Pt;
+    readonly earR: Pt;
+    readonly horns: Pt;
+  };
   readonly box: string;
   readonly brush: LineSet;
 };
@@ -279,12 +295,13 @@ export function RamPose({
         </About>
       );
     }
-    if (n === 'hornL') {
+    if (n === 'hornL' || n === 'hornR') {
+      /* a horn is hard: when the body squeezes, it moves with the skull and keeps its shape */
       return (
-        <React.Fragment key={n}>
+        <About key={n} p={P.pivots.horns} c="pc-unsqueeze">
           {piece}
-          <path d={L.ridges.hornL + L.ridges.hornR} fill="var(--pc-cat)" fillRule="evenodd" />
-        </React.Fragment>
+          <path d={L.ridges[n]} fill="var(--pc-cat)" fillRule="evenodd" />
+        </About>
       );
     }
     return piece;
@@ -328,7 +345,6 @@ function RamClimb({ viewBox, className }: { viewBox: string; className: string }
       <g clipPath={`url(#${id}-above)`}>
         <g className="pc-rise">
           <RamFront pudding={false} />
-          <RamHead />
         </g>
       </g>
       <PuddingBody rim={`${id}-rim`} />
@@ -336,7 +352,9 @@ function RamClimb({ viewBox, className }: { viewBox: string; className: string }
         <g className="pc-rise">
           <g className="pc-grab">
             <g clipPath={`url(#${id}-paws)`}>
-              <RamPiece part="chest" fill="var(--pc-ram)" />
+              <About p={R.pivots.paws} c="pc-body">
+                <RamPiece part="chest" fill="var(--pc-ram)" />
+              </About>
             </g>
           </g>
         </g>
@@ -363,7 +381,6 @@ export function Mark({
       <svg className={`pc ${className}`} viewBox={frame(animal, viewBox)} aria-hidden>
         <About p={R.pivots.pudding} c="pc-pud">
           <RamFront />
-          <RamHead />
         </About>
       </svg>
     );
@@ -449,6 +466,9 @@ export function Pudding({
 
 const clamp = (v: number, lo: number, hi: number): number => Math.max(lo, Math.min(hi, v));
 
+/* how far the ears of the ram turn back for each degree of lean */
+const EAR_HANG = 0.3;
+
 /* the centre of the face, as parts of the mark's square */
 export const FACE: Pt = [0.5, 0.41];
 
@@ -466,19 +486,26 @@ export function useLook(
     if (!el) return undefined;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
     let target = { x: 0, y: 0 };
-    const now = { x: 0, y: 0, lean: 0 };
+    const now = { x: 0, y: 0, lean: 0, ear: 0, earSpeed: 0 };
     let frame = 0;
     const step = (): void => {
       now.x += (target.x - now.x) * 0.14;
       now.y += (target.y - now.y) * 0.14;
       now.lean += (target.x * -lean - now.lean) * 0.1;
+      /* Soft ears hang: when the head turns, they turn back a little, late, and swing past
+         before they settle. Only the ram uses `--ear`. */
+      now.earSpeed = (now.earSpeed + (now.lean * EAR_HANG - now.ear) * 0.08) * 0.8;
+      now.ear += now.earSpeed;
       el.style.setProperty('--lx', `${(now.x * 34).toFixed(1)}px`);
       el.style.setProperty('--ly', `${(now.y * 22).toFixed(1)}px`);
       el.style.setProperty('--lean', `${now.lean.toFixed(2)}deg`);
+      el.style.setProperty('--ear', `${now.ear.toFixed(2)}deg`);
       const settled =
         Math.abs(target.x - now.x) < 0.004 &&
         Math.abs(target.y - now.y) < 0.004 &&
-        Math.abs(target.x * -lean - now.lean) < 0.02;
+        Math.abs(target.x * -lean - now.lean) < 0.02 &&
+        Math.abs(now.lean * EAR_HANG - now.ear) < 0.02 &&
+        Math.abs(now.earSpeed) < 0.01;
       frame = settled ? 0 : requestAnimationFrame(step);
     };
     const onMove = (event: PointerEvent): void => {

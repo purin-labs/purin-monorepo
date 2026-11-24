@@ -1060,13 +1060,104 @@
   animation: none;
 }
 
-/* the face is a large part of the head, so it looks a shorter way */
-:where(.hc.is-ram) .pc-face {
-  transform: translate(calc(var(--lx, 0px) * 0.5), calc(var(--ly, 0px) * 0.5));
+/* The horns of the ram are hard, so its head never bends: it turns as one piece about the neck.
+   The soft parts give. The chest leans to the pointer and carries the head, the ears hang and
+   swing (`--ear`), and the face looks a short way. */
+@keyframes hc-ram-sway {
+  from {
+    transform: rotate(-1.2deg);
+  }
+  to {
+    transform: rotate(1.2deg);
+  }
 }
 
+:where(.hc.is-ram) .pc-sway {
+  animation-name: hc-ram-sway;
+}
+
+:where(.hc.is-ram) .pc-lean {
+  transform: rotate(clamp(-6deg, calc(var(--lean, 0deg) * -0.6), 6deg));
+}
+
+:where(.hc.is-ram) .pc-body {
+  --pc-body-lean: clamp(-6deg, calc(var(--lean, 0deg) * 0.9), 6deg);
+
+  transform: skewX(var(--pc-body-lean));
+}
+
+/* the same lean, back out of the head, so the head only moves with the top of the chest */
+:where(.hc.is-ram) .pc-unbody {
+  transform: skewX(calc(var(--pc-body-lean, 0deg) * -1));
+}
+
+:where(.hc.is-ram) .pc-ear {
+  rotate: var(--ear, 0deg);
+}
+
+:where(.hc.is-ram) .pc-face {
+  transform: translate(calc(var(--lx, 0px) * 0.3), calc(var(--ly, 0px) * 0.3));
+}
+
+/* the mouth and the beard sit on the muzzle, so they move with it as one piece */
 :where(.hc.is-ram) .pc-nose {
-  transform: translate(calc(var(--lx, 0px) * 0.12), calc(var(--ly, 0px) * 0.12));
+  transform: none;
+}
+
+/* A poke: the pudding wobbles, and the chest rides on it. The head takes the wobble back out
+   (each step of `hc-ram-unjiggle` is the inverse of the same step of `hc-ram-jiggle`), so it
+   only bobs with the neck. Each step names every function, so the two stay inverse between
+   the steps too. */
+@keyframes hc-ram-jiggle {
+  0%,
+  100% {
+    transform: skewX(0deg) scale(1, 1);
+  }
+  14% {
+    transform: skewX(3.8deg) scale(1.03, 0.962);
+  }
+  32% {
+    transform: skewX(-2.7deg) scale(0.985, 1.022);
+  }
+  50% {
+    transform: skewX(1.6deg) scale(1.007, 0.993);
+  }
+  68% {
+    transform: skewX(-0.9deg) scale(1, 1);
+  }
+  84% {
+    transform: skewX(0.4deg) scale(1, 1);
+  }
+}
+
+@keyframes hc-ram-unjiggle {
+  0%,
+  100% {
+    transform: scale(1, 1) skewX(0deg);
+  }
+  14% {
+    transform: scale(0.9709, 1.0395) skewX(-3.8deg);
+  }
+  32% {
+    transform: scale(1.0152, 0.9785) skewX(2.7deg);
+  }
+  50% {
+    transform: scale(0.993, 1.007) skewX(-1.6deg);
+  }
+  68% {
+    transform: scale(1, 1) skewX(0.9deg);
+  }
+  84% {
+    transform: scale(1, 1) skewX(-0.4deg);
+  }
+}
+
+:where(.hc.is-ram) .is-jiggle .pc-pud {
+  animation: hc-ram-jiggle 0.9s linear;
+}
+
+:where(.hc.is-ram) .is-jiggle .pc-unjiggle {
+  animation: hc-ram-unjiggle 0.9s linear;
 }
 
 .hc.is-ram .hc-loader .pc-eye {
@@ -1267,8 +1358,31 @@
   animation: hc-ram-chew 2.8s ease-in-out infinite;
 }
 
+/* the inverse of each step of the hug, for the horns: they move with the skull and keep
+   their shape */
+@keyframes hc-ram-unhug {
+  0%,
+  70%,
+  100% {
+    transform: none;
+  }
+  77% {
+    transform: scale(0.9662, 1.0363);
+  }
+  84% {
+    transform: scale(1.0101, 0.9881);
+  }
+  90% {
+    transform: none;
+  }
+}
+
 .pc-pose--hug .pc-squeeze {
   animation: hc-ram-hug 3.6s ease-in-out infinite;
+}
+
+.pc-pose--hug .pc-unsqueeze {
+  animation: hc-ram-unhug 3.6s ease-in-out infinite;
 }
 
 /* the eating ram stands on the slip, so it needs more room than a head */
