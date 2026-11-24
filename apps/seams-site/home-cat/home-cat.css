@@ -980,3 +980,351 @@
     height: 29cqw;
   }
 }
+
+/* ---------- the ram as the mark (concept) ---------- */
+
+.hc {
+  /* the body and the horns of the ram; its lines are the colour of the cat */
+  --pc-ram: #9c7a5e;
+  --pc-ram-horn: #e2d5bc;
+  /* the croissant: its light side and its shade */
+  --pc-bread: #eaae5c;
+  --pc-crust: #c47f3c;
+}
+
+/* The ram's ears hang out from the head, so a flick turns them up about the root;
+   a lean, as on the tall ears of the cat, would bend them. */
+@keyframes hc-ram-flick {
+  0% {
+    transform: none;
+  }
+  1.4% {
+    transform: rotate(calc(var(--pc-ear-out) * 16deg));
+  }
+  3.2% {
+    transform: rotate(calc(var(--pc-ear-out) * -5deg));
+  }
+  4.8% {
+    transform: rotate(calc(var(--pc-ear-out) * 2deg));
+  }
+  6.4%,
+  100% {
+    transform: none;
+  }
+}
+
+@keyframes hc-ram-flick-once {
+  0% {
+    transform: none;
+  }
+  22% {
+    transform: rotate(calc(var(--pc-ear-out) * 16deg));
+  }
+  50% {
+    transform: rotate(calc(var(--pc-ear-out) * -5deg));
+  }
+  75% {
+    transform: rotate(calc(var(--pc-ear-out) * 2deg));
+  }
+  100% {
+    transform: none;
+  }
+}
+
+/* The eyes of the ram are closed, so a blink is a small squeeze of each line. */
+@keyframes hc-ram-squeeze {
+  0%,
+  93% {
+    transform: none;
+  }
+  95.5% {
+    transform: scale(1.12, 0.6);
+  }
+  98%,
+  100% {
+    transform: none;
+  }
+}
+
+/* These rules replace only the rest loops; a part that runs its own motion keeps it. */
+:where(.hc.is-ram) .pc-ear {
+  animation-name: hc-ram-flick;
+}
+
+:where(.hc.is-ram) .pc-eye {
+  animation-name: hc-ram-squeeze;
+}
+
+/* the paws hold the pudding, so the ram and the pudding move as one and do not wobble at rest */
+:where(.hc.is-ram) .pc-pud {
+  animation: none;
+}
+
+/* the face is a large part of the head, so it looks a shorter way */
+:where(.hc.is-ram) .pc-face {
+  transform: translate(calc(var(--lx, 0px) * 0.5), calc(var(--ly, 0px) * 0.5));
+}
+
+:where(.hc.is-ram) .pc-nose {
+  transform: translate(calc(var(--lx, 0px) * 0.12), calc(var(--ly, 0px) * 0.12));
+}
+
+.hc.is-ram .hc-loader .pc-eye {
+  animation-name: hc-ram-squeeze;
+}
+
+/* The stamp with the ram, in the 7.2 s loop of the seal. The pudding lands (14 to 27%) and the
+   ram climbs up behind it (20 to 29%), as the cat does. Then the paws drop onto the pudding
+   (29 to 33%): the pudding gives a little under them, the ears flick and the eyes squeeze,
+   all on the moment that the paws land. */
+@keyframes hc-ram-grab {
+  0%,
+  28.8% {
+    opacity: 0;
+    transform: translateY(-96px);
+  }
+  29% {
+    opacity: 1;
+    transform: translateY(-96px);
+    animation-timing-function: cubic-bezier(0.55, 0, 0.85, 0.35);
+  }
+  31.4% {
+    transform: translateY(6px);
+  }
+  33%,
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes hc-ram-pud-stamp {
+  0%,
+  14.4% {
+    opacity: 0;
+    transform: scale(2.3);
+    animation-timing-function: cubic-bezier(0.6, 0, 0.9, 0.4);
+  }
+  15.2% {
+    opacity: 1;
+  }
+  17.6% {
+    opacity: 1;
+    transform: scale(1.08, 0.84);
+  }
+  19.6% {
+    transform: skewX(4deg) scale(0.96, 1.06);
+  }
+  21.6% {
+    transform: skewX(-3deg) scale(1.02, 0.98);
+  }
+  23.6% {
+    transform: skewX(1.6deg);
+  }
+  25.4% {
+    transform: skewX(-0.7deg);
+  }
+  27%,
+  31% {
+    opacity: 1;
+    transform: none;
+  }
+  31.8% {
+    transform: scale(1.02, 0.975);
+  }
+  33.4%,
+  86% {
+    opacity: 1;
+    transform: none;
+  }
+  92%,
+  100% {
+    opacity: 0;
+    transform: none;
+  }
+}
+
+@keyframes hc-ram-stamp-ear {
+  0%,
+  31.6% {
+    transform: none;
+  }
+  33% {
+    transform: rotate(calc(var(--pc-ear-out) * 14deg));
+  }
+  34.6% {
+    transform: rotate(calc(var(--pc-ear-out) * -4deg));
+  }
+  36%,
+  100% {
+    transform: none;
+  }
+}
+
+@keyframes hc-ram-stamp-eye {
+  0%,
+  32% {
+    transform: none;
+  }
+  33.6% {
+    transform: scale(1.12, 0.6);
+  }
+  35.6%,
+  100% {
+    transform: none;
+  }
+}
+
+.hc.is-ram .hc-seal .pc-grab {
+  animation: hc-ram-grab 7.2s linear infinite;
+}
+
+.hc.is-ram .hc-seal .pc-pud {
+  animation-name: hc-ram-pud-stamp;
+}
+
+.hc.is-ram .hc-seal .pc-ear {
+  animation: hc-ram-stamp-ear 7.2s linear infinite;
+}
+
+.hc.is-ram .hc-seal .pc-eye {
+  animation-name: hc-ram-stamp-eye;
+}
+
+/* The eyes of the ram are low in its frame, under the horns, so it comes up a little
+   farther over the line; at rest it is still out of view. */
+.hc.is-ram .hc-tour__cat {
+  transform: translateY(calc((1 - var(--up, 0)) * 100% - var(--up, 0) * 12%));
+}
+
+/* The ram holds its pudding with its paws, so after the catch it is in front of the
+   pudding, and its chest meets the top of the pudding as in the mark. */
+.hc.is-ram .hc-tour__rider {
+  z-index: 4;
+}
+
+.hc.is-ram .hc-tour__sit {
+  bottom: -15px;
+}
+
+/* the script holds the eyes in the tour; a closed eye squeezes and does not go away */
+.hc.is-ram .hc-tour .pc-eye {
+  transform: scaleY(max(var(--eye, 1), 0.55));
+}
+
+.hc.is-ram .hc-tour .is-low .pc-ear {
+  transform: rotate(calc(var(--pc-ear-out) * -12deg));
+}
+
+.hc.is-ram .hc-tour .is-twitch-l .pc-ear--l,
+.hc.is-ram .hc-tour .is-twitch-r .pc-ear--r {
+  animation: hc-ram-flick-once 0.42s linear;
+}
+
+/* The ram eats: the croissant and the paws go up to the mouth three times, then rest. */
+@keyframes hc-ram-chew {
+  0%,
+  34%,
+  100% {
+    transform: none;
+  }
+  5% {
+    transform: translateY(-20px);
+  }
+  10% {
+    transform: none;
+  }
+  15% {
+    transform: translateY(-20px);
+  }
+  20% {
+    transform: none;
+  }
+  26% {
+    transform: translateY(-15px);
+  }
+}
+
+/* The ram hugs: one small squeeze about its feet, then rest. */
+@keyframes hc-ram-hug {
+  0%,
+  70%,
+  100% {
+    transform: none;
+  }
+  77% {
+    transform: scale(1.035, 0.965);
+  }
+  84% {
+    transform: scale(0.99, 1.012);
+  }
+  90% {
+    transform: none;
+  }
+}
+
+.pc-pose--eat .pc-chew {
+  animation: hc-ram-chew 2.8s ease-in-out infinite;
+}
+
+.pc-pose--hug .pc-squeeze {
+  animation: hc-ram-hug 3.6s ease-in-out infinite;
+}
+
+/* the eating ram stands on the slip, so it needs more room than a head */
+.hc.is-ram .hc-loader__cat {
+  width: 21cqw;
+}
+
+/* the header wordmark with the ram */
+.hc.is-ram .purin-wordmark {
+  mask-image: var(--hc-wordmark) !important;
+  width: auto !important;
+  aspect-ratio: var(--hc-wordmark-ratio);
+}
+
+/* the switches at the bottom left: the cat or the ram, and the lines of the ram */
+.hc-switches {
+  position: fixed;
+  left: max(16px, env(safe-area-inset-left, 0px));
+  bottom: max(16px, env(safe-area-inset-bottom, 0px));
+  z-index: 45;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.hc-switch {
+  display: flex;
+  gap: 2px;
+  padding: 4px;
+  border: 1px solid rgba(48, 29, 23, 0.14);
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 10px 26px -14px rgba(48, 29, 23, 0.45);
+  font: 600 14px/1 var(--h2-font);
+}
+
+.hc-switch__option {
+  min-width: 64px;
+  padding: 9px 14px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--h2-graphite);
+  cursor: pointer;
+  transition:
+    background-color 0.18s ease,
+    color 0.18s ease;
+}
+
+.hc-switch__option[aria-pressed='true'] {
+  background: var(--pc-cat);
+  color: var(--pc-cream);
+}
+
+.hc-switch__option:focus-visible {
+  outline: 2px solid var(--pc-custard);
+  outline-offset: 2px;
+}
