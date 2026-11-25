@@ -10,7 +10,7 @@ import { createRoot } from 'react-dom/client';
 import { EcosystemField } from '@/components/h2/EcosystemField';
 import { InkDrawing } from '@/components/h2/ink/InkScene';
 import { goatCatScene } from '@/components/h2/ink/catScenes';
-import { keyScene, stalkScene } from '@/components/h2/ink/scenes';
+import { goatScene, keyScene, stalkScene } from '@/components/h2/ink/scenes';
 import NavbarCompact from '@/components/Navbar/NavbarCompact';
 import { ProductTour } from '@/components/h2/ProductTour';
 import { useSiteRouter } from '@/app/router/useSiteRouter';
@@ -28,7 +28,21 @@ import {
   H2WalletBand,
 } from '@/components/h2/sections';
 import '@/i18n/styles.css';
-import { Cat, FACE, Mark, Pudding, useLook } from './cat';
+import {
+  type Animal,
+  AnimalContext,
+  Cat,
+  FACE,
+  type Lines,
+  LinesContext,
+  Mark,
+  Pudding,
+  RamPose,
+  useLook,
+} from './cat';
+import ramIcon from './ram-icon.svg?url';
+import { R } from './ram-paths';
+import ramWordmark from './ram-wordmark.svg?url';
 import './home-cat.css';
 
 /* Concept: the front page, with the Purin cat in six parts of the interface.
@@ -198,6 +212,7 @@ function TourRider({ children }: { children: React.ReactNode }): React.JSX.Eleme
 function HcHero(): React.JSX.Element {
   const { linkProps } = useSiteRouter();
   const copy = useSiteCopy();
+  const animal = React.useContext(AnimalContext);
   const contactProps = linkProps(CONTACT_LINK_TARGET);
   const pantryProps = linkProps('/ecommerce');
   const kitchenProps = linkProps('/ecommerce#kitchen');
@@ -209,8 +224,14 @@ function HcHero(): React.JSX.Element {
         aria-labelledby="h2-home-title"
       >
         <div className="h2-shell">
-          {/* the ink is the world: the goat leads the kite, and the cat follows and waits */}
-          <InkDrawing scene={goatCatScene} className="h2-ink--hero" drawn />
+          {/* the ink is the world: the goat leads the kite, and the cat follows and waits;
+              when the ram is the mark, the ink goat leads alone */}
+          <InkDrawing
+            key={animal}
+            scene={animal === 'ram' ? goatScene : goatCatScene}
+            className="h2-ink--hero"
+            drawn
+          />
           <div className="h2-hero-simple__copy">
             <p className="hc-chip">
               <span className="hc-chip__disc" aria-hidden>
@@ -261,6 +282,7 @@ const TOOLS = ['Slack', 'Gmail', 'Shopify', 'Square', 'Stripe'] as const;
 
 function LoaderArt(): React.JSX.Element {
   const ref = React.useRef<HTMLDivElement>(null);
+  const animal = React.useContext(AnimalContext);
   const live = useInView(ref);
   const [tool, setTool] = React.useState(0);
   return (
@@ -269,12 +291,14 @@ function LoaderArt(): React.JSX.Element {
       className={`h2-ink h2-ink--banner hc-art hc-loader${live ? ' is-live' : ''}`}
       aria-hidden
     >
-      <div className="hc-art__fit">
+      {/* a new animal starts the loop again, so the ram, the bar and the labels keep in time */}
+      <div className="hc-art__fit" key={animal}>
         <div
           className="hc-loader__cat"
           style={{ '--lx': '-24px', '--ly': '16px' } as React.CSSProperties}
         >
-          <Cat />
+          {/* the ram eats a croissant while the tool connects: each bite fills a step of the bar */}
+          {animal === 'ram' ? <RamPose pose="eat" /> : <Cat />}
         </div>
         <div className="hc-slip hc-loader__slip">
           <span className="hc-loader__labels">
@@ -379,6 +403,7 @@ const GUIDE_LOOK = { face: FACE, reach: 2.4, lean: 3 } as const;
 
 function Guide(): React.JSX.Element {
   const catRef = React.useRef<HTMLButtonElement>(null);
+  const animal = React.useContext(AnimalContext);
   const [step, setStep] = React.useState(0);
   const [quiet, setQuiet] = React.useState(false);
   useLook(catRef, GUIDE_LOOK);
@@ -425,20 +450,91 @@ function Guide(): React.JSX.Element {
         onClick={() => setQuiet((value) => !value)}
         aria-label={quiet ? 'Show the guide text' : 'Hide the guide text'}
       >
-        {/* the cat nods each time that it says something new */}
+        {/* the cat nods each time that it says something new; at the end of the page
+            the ram hugs a croissant */}
         <span className="hc-guide__nod" key={step}>
-          <Mark />
+          {animal === 'ram' && step === GUIDE.length - 1 ? <RamPose pose="hug" /> : <Mark />}
         </span>
       </button>
     </aside>
   );
 }
 
+/* ---------- the switches: the cat or the ram as the mark, and how the ram's lines are drawn ---------- */
+
+const ANIMALS: readonly { value: Animal; label: string }[] = [
+  { value: 'cat', label: 'Cat' },
+  { value: 'ram', label: 'Ram' },
+];
+
+const LINES: readonly { value: Lines; label: string }[] = [
+  { value: 'solid', label: 'Solid' },
+  { value: 'brushed', label: 'Brushed' },
+];
+
+/* How the page shows the mark. The address keeps it: `#ram`, or `#ram-brushed`. */
+type Look = { readonly animal: Animal; readonly lines: Lines };
+
+const startLook = (): Look => {
+  const parts = window.location.hash.slice(1).split('-');
+  return {
+    animal: parts[0] === 'ram' ? 'ram' : 'cat',
+    lines: parts.includes('brushed') ? 'brushed' : 'solid',
+  };
+};
+
+const lookHash = (look: Look): string => (look.lines === 'brushed' ? '#ram-brushed' : '#ram');
+
+function Switch<T extends string>({
+  label,
+  value,
+  options,
+  onChange,
+}: {
+  label: string;
+  value: T;
+  options: readonly { value: T; label: string }[];
+  onChange: (next: T) => void;
+}): React.JSX.Element {
+  return (
+    <div className="hc-switch" role="group" aria-label={label}>
+      {options.map((option) => (
+        <button
+          key={option.value}
+          type="button"
+          className="hc-switch__option"
+          aria-pressed={value === option.value}
+          onClick={() => onChange(option.value)}
+        >
+          {option.label}
+        </button>
+      ))}
+    </div>
+  );
+}
+
 /* ---------- the page ---------- */
 
-function HomeCatPage(): React.JSX.Element {
+function HomeCatPage({
+  look,
+  onLook,
+}: {
+  look: Look;
+  onLook: (next: Look) => void;
+}): React.JSX.Element {
+  const ram = look.animal === 'ram';
   return (
-    <div className="h2-page hc">
+    <div
+      className={`h2-page hc${ram ? ' is-ram' : ''}`}
+      style={
+        ram
+          ? ({
+              '--hc-wordmark': `url("${ramWordmark}")`,
+              '--hc-wordmark-ratio': R.wordmarkRatio,
+            } as React.CSSProperties)
+          : undefined
+      }
+    >
       <NavbarCompact appearance="light" />
       <div className="h2-col">
         <HcHero />
@@ -450,12 +546,29 @@ function HomeCatPage(): React.JSX.Element {
         <H2Footer faq="home" />
       </div>
       <Guide />
+      <div className="hc-switches">
+        <Switch
+          label="Mark"
+          value={look.animal}
+          options={ANIMALS}
+          onChange={(animal) => onLook({ ...look, animal })}
+        />
+        {ram ? (
+          <Switch
+            label="Lines of the ram"
+            value={look.lines}
+            options={LINES}
+            onChange={(lines) => onLook({ ...look, lines })}
+          />
+        ) : null}
+      </div>
     </div>
   );
 }
 
 function Shell(): React.JSX.Element {
   const sitePage = React.useMemo(() => parseSitePage('/'), []);
+  const [look, setLook] = React.useState<Look>(startLook);
   React.useEffect(() => {
     const root = document.documentElement;
     root.setAttribute('data-seams-theme', 'light');
@@ -464,10 +577,21 @@ function Shell(): React.JSX.Element {
       root.style.setProperty(`--seams-colors-${name}`, value);
     }
   }, []);
+  /* the favicon and the address follow the switch */
+  React.useEffect(() => {
+    const ram = look.animal === 'ram';
+    const icon = document.querySelector<HTMLLinkElement>('link[rel="icon"]');
+    if (icon) icon.href = ram ? ramIcon : '/brand/favicon.svg';
+    window.history.replaceState(null, '', ram ? lookHash(look) : window.location.pathname);
+  }, [look]);
   return (
     <SitePageContext.Provider value={sitePage}>
-      <HomeCatPage />
-      <ContactModalHost />
+      <AnimalContext.Provider value={look.animal}>
+        <LinesContext.Provider value={look.lines}>
+          <HomeCatPage look={look} onLook={setLook} />
+          <ContactModalHost />
+        </LinesContext.Provider>
+      </AnimalContext.Provider>
     </SitePageContext.Provider>
   );
 }
