@@ -1160,10 +1160,6 @@
   animation: hc-ram-unjiggle 0.9s linear;
 }
 
-.hc.is-ram .hc-loader .pc-eye {
-  animation-name: hc-ram-squeeze;
-}
-
 /* The stamp with the ram, in the 7.2 s loop of the seal. The pudding lands (14 to 27%) and the
    ram climbs up behind it (20 to 29%), as the cat does. Then the paws drop onto the pudding
    (29 to 33%): the pudding gives a little under them, the ears flick and the eyes squeeze,
@@ -1312,30 +1308,6 @@
   animation: hc-ram-flick-once 0.42s linear;
 }
 
-/* The ram eats: the croissant and the paws go up to the mouth three times, then rest. */
-@keyframes hc-ram-chew {
-  0%,
-  34%,
-  100% {
-    transform: none;
-  }
-  5% {
-    transform: translateY(-20px);
-  }
-  10% {
-    transform: none;
-  }
-  15% {
-    transform: translateY(-20px);
-  }
-  20% {
-    transform: none;
-  }
-  26% {
-    transform: translateY(-15px);
-  }
-}
-
 /* The ram hugs: one small squeeze about its feet, then rest. */
 @keyframes hc-ram-hug {
   0%,
@@ -1352,10 +1324,6 @@
   90% {
     transform: none;
   }
-}
-
-.pc-pose--eat .pc-chew {
-  animation: hc-ram-chew 2.8s ease-in-out infinite;
 }
 
 /* the inverse of each step of the hug, for the horns: they move with the skull and keep
@@ -1383,6 +1351,356 @@
 
 .pc-pose--hug .pc-unsqueeze {
   animation: hc-ram-unhug 3.6s ease-in-out infinite;
+}
+
+/* ---------- the loader with the ram: bites fill the bar ----------
+   The 6.4 s loop of the loader. The ram comes up behind the slip with a whole croissant (5 to
+   13%). Then it takes four bites, one every 0.77 s: the croissant and the paws go up to the
+   mouth, and at the top (19, 31, 43 and 55%) a piece of the croissant is gone, two crumbs fly,
+   the eyes squeeze and the bar takes its step, all on that moment. The bites go deeper, so the
+   paws go a little higher each time. The last bite takes the rest, and the bar is full (59%):
+   the ram gives one happy squeeze and flicks its ears as the label says that the tool is
+   connected (60%). Then it goes down behind the slip (90 to 97%), where it gets a new
+   croissant. */
+/* the ram is wider than the slip, so it goes all the way down: no horn shows beside the slip */
+@keyframes hc-ram-loader-rise {
+  0%,
+  5% {
+    transform: translateY(100%);
+  }
+  13%,
+  90% {
+    transform: translateY(0);
+  }
+  97%,
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes hc-ram-loader-fill {
+  0%,
+  19% {
+    width: 5%;
+  }
+  23%,
+  31% {
+    width: 30%;
+  }
+  35%,
+  43% {
+    width: 55%;
+  }
+  47%,
+  55% {
+    width: 80%;
+  }
+  59%,
+  100% {
+    width: 100%;
+  }
+}
+
+/* up to the mouth (ease in and out), and back down after the bite (ease out) */
+@keyframes hc-ram-bites {
+  0%,
+  15% {
+    transform: none;
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  }
+  19%,
+  20% {
+    transform: translateY(-20px);
+    animation-timing-function: cubic-bezier(0.2, 0, 0.4, 1);
+  }
+  24%,
+  27% {
+    transform: none;
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  }
+  31%,
+  32% {
+    transform: translateY(-24px);
+    animation-timing-function: cubic-bezier(0.2, 0, 0.4, 1);
+  }
+  36%,
+  39% {
+    transform: none;
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  }
+  43%,
+  44% {
+    transform: translateY(-28px);
+    animation-timing-function: cubic-bezier(0.2, 0, 0.4, 1);
+  }
+  48%,
+  51% {
+    transform: none;
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  }
+  55%,
+  56% {
+    transform: translateY(-32px);
+    animation-timing-function: cubic-bezier(0.2, 0, 0.4, 1);
+  }
+  60%,
+  100% {
+    transform: none;
+  }
+}
+
+/* one stage of the croissant at a time: whole, then after the first, second and third bite */
+@keyframes hc-ram-bite-0 {
+  0%,
+  18.99% {
+    opacity: 1;
+  }
+  19%,
+  96.99% {
+    opacity: 0;
+  }
+  97%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes hc-ram-bite-1 {
+  0%,
+  18.99% {
+    opacity: 0;
+  }
+  19%,
+  30.99% {
+    opacity: 1;
+  }
+  31%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes hc-ram-bite-2 {
+  0%,
+  30.99% {
+    opacity: 0;
+  }
+  31%,
+  42.99% {
+    opacity: 1;
+  }
+  43%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes hc-ram-bite-3 {
+  0%,
+  42.99% {
+    opacity: 0;
+  }
+  43%,
+  54.99% {
+    opacity: 1;
+  }
+  55%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* the crumbs on the muzzle come with the first bite and go with the croissant */
+@keyframes hc-ram-crumbs {
+  0%,
+  18.99% {
+    opacity: 0;
+  }
+  19%,
+  96.99% {
+    opacity: 1;
+  }
+  97%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* A crumb flies out and up from the bite, then it falls. Each crumb starts at its own bite
+   (--at), where the croissant is up by --lift. */
+@keyframes hc-ram-crumb {
+  0% {
+    opacity: 1;
+    transform: translate(0, var(--lift));
+    animation-timing-function: cubic-bezier(0.2, 0.6, 0.4, 1);
+  }
+  3% {
+    transform: translate(calc(var(--side) * 34px), calc(var(--lift) - 18px));
+    animation-timing-function: cubic-bezier(0.5, 0, 0.9, 0.6);
+  }
+  8% {
+    opacity: 1;
+  }
+  10%,
+  100% {
+    opacity: 0;
+    transform: translate(calc(var(--side) * 56px), calc(var(--lift) + 70px));
+  }
+}
+
+/* a small squeeze of the eyes at each bite, and a big one when the tool is connected */
+@keyframes hc-ram-loader-eye {
+  0%,
+  18.5%,
+  22%,
+  30.5%,
+  34%,
+  42.5%,
+  46%,
+  54.5%,
+  58%,
+  59%,
+  66%,
+  100% {
+    transform: none;
+  }
+  19.5%,
+  31.5%,
+  43.5%,
+  55.5% {
+    transform: scale(1.06, 0.8);
+  }
+  61%,
+  63.5% {
+    transform: scale(1.14, 0.55);
+  }
+}
+
+/* the happy squeeze about the feet; the horns take it back out and keep their shape */
+@keyframes hc-ram-loader-squeeze {
+  0%,
+  59%,
+  66.5%,
+  100% {
+    transform: none;
+  }
+  61.5% {
+    transform: scale(1.035, 0.965);
+  }
+  64% {
+    transform: scale(0.99, 1.012);
+  }
+}
+
+@keyframes hc-ram-loader-unsqueeze {
+  0%,
+  59%,
+  66.5%,
+  100% {
+    transform: none;
+  }
+  61.5% {
+    transform: scale(0.9662, 1.0363);
+  }
+  64% {
+    transform: scale(1.0101, 0.9881);
+  }
+}
+
+@keyframes hc-ram-loader-ear {
+  0%,
+  59%,
+  65%,
+  100% {
+    transform: none;
+  }
+  60.5% {
+    transform: rotate(calc(var(--pc-ear-out) * 14deg));
+  }
+  62.5% {
+    transform: rotate(calc(var(--pc-ear-out) * -4deg));
+  }
+}
+
+/* the stages after a bite and the flying crumbs show only while the loader runs */
+.pc-bite--1,
+.pc-bite--2,
+.pc-bite--3,
+.pc-crumb {
+  opacity: 0;
+}
+
+.hc.is-ram .hc-loader__cat .pc {
+  animation-name: hc-ram-loader-rise;
+}
+
+.hc.is-ram .hc-loader .hc-bar__fill {
+  animation: hc-ram-loader-fill 6.4s cubic-bezier(0.2, 0.7, 0.3, 1) infinite;
+}
+
+.hc.is-ram .hc-loader .pc-chew {
+  animation: hc-ram-bites 6.4s linear infinite;
+}
+
+.hc.is-ram .hc-loader .pc-bite--0 {
+  animation: hc-ram-bite-0 6.4s linear infinite;
+}
+
+.hc.is-ram .hc-loader .pc-bite--1 {
+  animation: hc-ram-bite-1 6.4s linear infinite;
+}
+
+.hc.is-ram .hc-loader .pc-bite--2 {
+  animation: hc-ram-bite-2 6.4s linear infinite;
+}
+
+.hc.is-ram .hc-loader .pc-bite--3 {
+  animation: hc-ram-bite-3 6.4s linear infinite;
+}
+
+.hc.is-ram .hc-loader .pc-crumbs {
+  animation: hc-ram-crumbs 6.4s linear infinite;
+}
+
+.hc.is-ram .hc-loader .pc-crumb {
+  animation: hc-ram-crumb 6.4s linear infinite;
+  animation-delay: calc(var(--at) - 6.4s);
+}
+
+.pc-crumb--1 {
+  --at: 1.216s;
+  --lift: -20px;
+}
+
+.pc-crumb--2 {
+  --at: 1.984s;
+  --lift: -24px;
+}
+
+.pc-crumb--3 {
+  --at: 2.752s;
+  --lift: -28px;
+}
+
+.pc-crumb--4 {
+  --at: 3.52s;
+  --lift: -32px;
+}
+
+.hc.is-ram .hc-loader .pc-eye {
+  animation: hc-ram-loader-eye 6.4s ease-in-out infinite;
+}
+
+.hc.is-ram .hc-loader .pc-squeeze {
+  animation: hc-ram-loader-squeeze 6.4s ease-in-out infinite;
+}
+
+.hc.is-ram .hc-loader .pc-unsqueeze {
+  animation: hc-ram-loader-unsqueeze 6.4s ease-in-out infinite;
+}
+
+.hc.is-ram .hc-loader .pc-ear {
+  animation: hc-ram-loader-ear 6.4s linear infinite;
 }
 
 /* the eating ram stands on the slip, so it needs more room than a head */

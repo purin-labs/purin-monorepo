@@ -291,12 +291,13 @@ function LoaderArt(): React.JSX.Element {
       className={`h2-ink h2-ink--banner hc-art hc-loader${live ? ' is-live' : ''}`}
       aria-hidden
     >
-      <div className="hc-art__fit">
+      {/* a new animal starts the loop again, so the ram, the bar and the labels keep in time */}
+      <div className="hc-art__fit" key={animal}>
         <div
           className="hc-loader__cat"
           style={{ '--lx': '-24px', '--ly': '16px' } as React.CSSProperties}
         >
-          {/* the ram eats a croissant while the tool connects */}
+          {/* the ram eats a croissant while the tool connects: each bite fills a step of the bar */}
           {animal === 'ram' ? <RamPose pose="eat" /> : <Cat />}
         </div>
         <div className="hc-slip hc-loader__slip">

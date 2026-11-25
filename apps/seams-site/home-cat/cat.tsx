@@ -101,6 +101,8 @@ type LineSet = {
   readonly eyes: readonly string[];
   readonly mouth: string;
   readonly ridges: { readonly hornL: string; readonly hornR: string };
+  /** the edge of each bite in the croissant, when the ram eats one */
+  readonly bites?: readonly string[];
 };
 
 /* the solid lines, or the same lines painted with the brush */
@@ -241,7 +243,8 @@ function PuddingBody({ rim, halo = false }: { rim: string; halo?: boolean }): Re
 /* ---------- the ram with a croissant ----------
    Two more poses of the ram: it eats a croissant while it waits, and it hugs one when the
    work is done. The whole ram sways about its feet, its ears flick and its eyes squeeze.
-   When it eats, the croissant and the paws go up to the mouth; when it hugs, it squeezes. */
+   When it eats, the croissant and the paws go up to the mouth, and each bite takes a piece of
+   the croissant; when it hugs, it squeezes. */
 
 /* a pose: its solid lines, and the same lines brushed */
 type Pose = LineSet & {
@@ -252,9 +255,13 @@ type Pose = LineSet & {
     readonly earL: Pt;
     readonly earR: Pt;
     readonly horns: Pt;
+    /** where the bites start, at the top of the middle of the croissant */
+    readonly bite?: Pt;
   };
   readonly box: string;
   readonly brush: LineSet;
+  /** the part of the croissant that is gone after each bite but the last */
+  readonly cuts?: readonly string[];
 };
 
 const POSES: Record<'eat' | 'hug', Pose> = { eat: RAM_EAT, hug: RAM_HUG };
@@ -268,7 +275,6 @@ const POSE_FILL: Readonly<Record<string, string>> = {
   pawL: 'var(--pc-ram)',
   pawR: 'var(--pc-ram)',
   muzzle: 'var(--pc-cream)',
-  chin: 'var(--pc-cream)',
   crumbs: 'var(--pc-bread)',
   bread: 'var(--pc-bread)',
   crust: 'var(--pc-crust)',
@@ -276,6 +282,64 @@ const POSE_FILL: Readonly<Record<string, string>> = {
 
 /* the croissant and the paws that hold it, in front of the face */
 const HELD = new Set(['bread', 'crust', 'pawL', 'pawR']);
+const PAWS = new Set(['pawL', 'pawR']);
+
+/* The croissant as the ram eats it: whole, then after each bite. A bite cuts the croissant
+   and draws its own edge. The last bite takes the rest, so it has no stage. The loader shows
+   one stage at a time. */
+function Bites({
+  cuts,
+  edges,
+  children,
+}: {
+  cuts: readonly string[];
+  edges: readonly string[];
+  children: React.ReactNode;
+}): React.JSX.Element {
+  const id = useId();
+  return (
+    <>
+      <defs>
+        <g id={`${id}-food`}>{children}</g>
+        {cuts.map((d, i) => (
+          <clipPath key={d.slice(0, 24)} id={`${id}-cut${i}`}>
+            <path clipRule="evenodd" d={`M-2000 -2000H3000V3000H-2000Z${d}`} />
+          </clipPath>
+        ))}
+      </defs>
+      <use href={`#${id}-food`} className="pc-bite pc-bite--0" />
+      {cuts.map((d, i) => (
+        <g key={d.slice(0, 24)} className={`pc-bite pc-bite--${i + 1}`}>
+          <use href={`#${id}-food`} clipPath={`url(#${id}-cut${i})`} />
+          <path d={edges[i]} fill="var(--pc-cat)" fillRule="evenodd" />
+        </g>
+      ))}
+    </>
+  );
+}
+
+/* two crumbs fly from the croissant at each bite, one to each side */
+const CRUMB_BITES = [1, 2, 3, 4] as const;
+const CRUMB_SIDES = [-1, 1] as const;
+
+function Crumbs({ at }: { at: Pt }): React.JSX.Element {
+  return (
+    <g fill="var(--pc-bread)" stroke="var(--pc-cat)" strokeWidth={5}>
+      {CRUMB_BITES.flatMap((k) =>
+        CRUMB_SIDES.map((side) => (
+          <circle
+            key={`${k}${side}`}
+            className={`pc-crumb pc-crumb--${k}`}
+            style={{ '--side': side } as React.CSSProperties}
+            cx={at[0] + side * (14 + k * 3)}
+            cy={at[1] - 6}
+            r={k % 2 ? 12 : 10}
+          />
+        )),
+      )}
+    </g>
+  );
+}
 
 export function RamPose({
   pose,
@@ -288,6 +352,13 @@ export function RamPose({
   const L = useLineSet(P, P.brush);
   const part = (n: string): React.JSX.Element => {
     const piece = <Piece key={n} d={P.fills[n]} line={L.lines[n]} fill={POSE_FILL[n]} />;
+    if (n === 'crumbs') {
+      return (
+        <g key={n} className="pc-crumbs">
+          {piece}
+        </g>
+      );
+    }
     if (n === 'earL' || n === 'earR') {
       return (
         <About key={n} p={P.pivots[n]} c={`pc-ear pc-ear--${n === 'earL' ? 'l' : 'r'}`}>
@@ -306,6 +377,7 @@ export function RamPose({
     }
     return piece;
   };
+  const food = P.order.filter((n) => HELD.has(n) && !PAWS.has(n));
   return (
     <svg className={`pc pc-pose pc-pose--${pose} ${className}`} viewBox={P.box} aria-hidden>
       <About p={P.pivots.feet} c="pc-sway">
@@ -317,7 +389,17 @@ export function RamPose({
               <path key={d.slice(0, 24)} className="pc-eye" d={d} />
             ))}
           </g>
-          <g className="pc-chew">{P.order.filter((n) => HELD.has(n)).map(part)}</g>
+          <g className="pc-chew">
+            {P.cuts && L.bites ? (
+              <Bites cuts={P.cuts} edges={L.bites}>
+                {food.map(part)}
+              </Bites>
+            ) : (
+              food.map(part)
+            )}
+            {P.order.filter((n) => PAWS.has(n)).map(part)}
+          </g>
+          {P.pivots.bite ? <Crumbs at={P.pivots.bite} /> : null}
         </About>
       </About>
     </svg>
