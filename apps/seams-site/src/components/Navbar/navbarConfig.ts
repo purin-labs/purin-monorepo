@@ -20,6 +20,10 @@ const productLinks = {
   wallet: { landing: '/wallet', docs: '/docs/' },
 } as const;
 
+/* The header button opens the Pantry app. The shared navbar names this slot
+   "dashboard", because the Wallet site uses it for the Wallet console. */
+const PANTRY_APP_URL = 'https://pantry.purin.io/';
+
 const SATYR_KITCHEN = 'Kitchen';
 const SEAMS_WALLET = 'Seams Wallet';
 
@@ -111,7 +115,7 @@ export function getSiteNavbarConfig(locale: Locale): SiteNavbarConfig {
     labels: {
       primary: t('primary'),
       home: t('purinHome'),
-      dashboard: t('dashboard'),
+      dashboard: t('accessPantry'),
       openMenu: t('openMenu'),
       closeMenu: t('closeMenu'),
       ...about.labels,
@@ -123,6 +127,6 @@ export function getSiteNavbarConfig(locale: Locale): SiteNavbarConfig {
     },
     homeHref: '/',
     aboutHref: about.href,
-    dashboardHref: '/dashboard',
+    dashboardHref: PANTRY_APP_URL,
   };
 }

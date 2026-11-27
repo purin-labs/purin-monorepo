@@ -204,7 +204,7 @@ export const messages = {
   footerNavigation: { en: 'Footer navigation', ja: 'フッターナビゲーション' },
   purinHome: { en: 'Purin home', ja: 'Purinホーム' },
   primary: { en: 'Primary', ja: 'メインナビゲーション' },
-  dashboard: { en: 'Dashboard', ja: 'ダッシュボード' },
+  accessPantry: { en: 'Access Pantry', ja: 'Pantryを開く' },
   openMenu: { en: 'Open menu', ja: 'メニューを開く' },
   closeMenu: { en: 'Close menu', ja: 'メニューを閉じる' },
   satyrProduct: {
